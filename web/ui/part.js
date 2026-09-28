@@ -241,7 +241,7 @@ export function shade() {
 
   lastResult = res;
   markPrintTrisDirty();       // orientation moved: the cached print-space part is stale
-  syncLayerClipUI();
+  syncLayerClipUI(res);
   if (finsVisible && !gizmo.dragging) refreshFins();
   else if (finsVisible) markFinsStale();
 
@@ -346,6 +346,7 @@ export function updateFit() {
 }
 
 export let lastResult = null;
+export function getLastResult() { return lastResult; }
 export let threshold = DEFAULT_THRESHOLD;
 const thrInput = el('thr');
 thrInput.value = String(threshold);

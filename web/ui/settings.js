@@ -12,7 +12,7 @@ import { removeMode, syncRemoveUI, cancelRemove } from './remove.js';
 import { setDrawMsg, clearPreview, syncDrawControls } from './walls.js';
 import { lastBuilt, refreshFins } from './finbuild.js';
 import { setGizmo } from './pose.js';
-import { paintOverhangs, lastResult } from './part.js';
+import { paintOverhangs, getLastResult } from './part.js';
 import { setLayerClip } from './scene.js';
 
 export let finsVisible = false;
@@ -111,6 +111,8 @@ function syncTineGrip() {
   el('tinegrip-fld').hidden = !on;
   // The Light pad is one layer tall, so it reads the layer height too.
   el('layerh-fld').hidden = !on && !['light', 'auto'].includes(el('bed-pad').value);
+  // Nozzle diameter only affects tine width — no point showing it without tines.
+  if (el('nozzle-fld')) el('nozzle-fld').hidden = !on;
 }
 el('tines').addEventListener('change', () => { syncTineGrip(); refreshFins(); });
 el('tine-density').addEventListener('input', () => debouncedRefresh());
@@ -308,16 +310,16 @@ export function initSettings() {
   applyMaterial(el('material').value);   // sync density + tunables to the initial choice
 }
 
-export function syncLayerClipUI() {
+export function syncLayerClipUI(result = null) {
   const on = el('clip-layer')?.checked;
   const fld = el('clip-fld');
   if (fld) fld.hidden = !on;
-  if (!on || !lastResult) {
+  if (!on || !result) {
     setLayerClip(Infinity, false);
     return;
   }
   const slider = el('clip-z');
-  const zMax = Math.ceil(lastResult.size.z);
+  const zMax = Math.ceil(result.size.z);
   slider.max = zMax;
   if (slider.valueAsNumber > zMax) slider.value = zMax;
   const val = Math.min(zMax, Math.max(0, slider.valueAsNumber));
@@ -325,7 +327,7 @@ export function syncLayerClipUI() {
   setLayerClip(val, true);
 }
 
-el('clip-layer')?.addEventListener('change', syncLayerClipUI);
+el('clip-layer')?.addEventListener('change', () => syncLayerClipUI(getLastResult()));
 el('clip-z')?.addEventListener('input', () => {
   const val = el('clip-z').valueAsNumber;
   el('clip-val').textContent = `${val.toFixed(1)} mm`;
