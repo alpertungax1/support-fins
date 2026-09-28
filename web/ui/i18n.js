@@ -43,8 +43,13 @@ export const DICT = {
     redo: 'Redo',
     dragHint: 'Drag the rings to turn it, or:',
     layFace: 'Lay a face flat',
+    layFaceArmed: 'Click a face to lay it flat — Esc cancels',
     showLayers: 'Show layers',
     suggestOrient: 'Suggest orientation',
+    ranking: 'Ranking…',
+    noPrintableOrient: 'No printable orientation: this part balances on a point at every angle.',
+    nothingToSuggest: 'Nothing to suggest for this part.',
+    clickPoseToTurn: 'Click a pose to turn the part.',
     strengthArrowLede: '<strong>Strength arrow</strong>: which way is it loaded?',
     loadFront: '⊙ front',
     loadBack: '⊗ back',
@@ -189,8 +194,13 @@ export const DICT = {
     redo: 'Yinele',
     dragHint: 'Çevirmek için halkaları sürükleyin veya:',
     layFace: 'Yüzeyi Tablaya Oturt',
+    layFaceArmed: 'Düz oturtmak için bir yüzeye tıklayın — Esc iptal eder',
     showLayers: 'Katmanları Göster',
     suggestOrient: 'En İyi Yönü Öner',
+    ranking: 'Sıralanıyor…',
+    noPrintableOrient: 'Yazdırılabilir yön bulunamadı: parça her açıda bir noktada dengeleniyor.',
+    nothingToSuggest: 'Bu parça için önerilecek alternatif yön bulunamadı.',
+    clickPoseToTurn: 'Parçayı çevirmek için bir yöne tıklayın.',
     strengthArrowLede: '<strong>Dayanım Oku</strong>: parça hangi yönden yük alıyor?',
     loadFront: '⊙ ön',
     loadBack: '⊗ arka',
@@ -359,6 +369,7 @@ export function setLanguage(lang) {
 
   // 4. Trigger recap refresh if settings loaded
   if (window.__syncSectionSums) window.__syncSectionSums();
+  if (window.__syncLayUI) window.__syncLayUI();
 }
 
 export function initI18n() {

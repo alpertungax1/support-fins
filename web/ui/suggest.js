@@ -10,6 +10,7 @@ import { part, topology, threshold, shade } from './part.js';
 import { materialDensity } from './settings.js';
 import { lastBuilt } from './finbuild.js';
 import { fmtGrams } from './readout.js';
+import { t } from './i18n.js';
 
 const _sm4 = new THREE.Matrix4();
 let suggestions = [];
@@ -133,7 +134,7 @@ export function clearSuggestionMark() {
 el('suggest-orient').addEventListener('click', () => {
   if (!part || !topology) return;
   const btn = el('suggest-orient');
-  btn.disabled = true; btn.textContent = 'Ranking…';
+  btn.disabled = true; btn.textContent = t('ranking');
   // let the button repaint before the (up to ~1s) solve blocks the thread
   requestAnimationFrame(() => requestAnimationFrame(() => {
     try {
@@ -152,8 +153,8 @@ el('suggest-orient').addEventListener('click', () => {
       if (!candidates.length || confidence === 'none') {
         el('suggest-list').hidden = true;
         el('suggest-note').textContent = confidence === 'none'
-          ? 'No printable orientation: this part balances on a point at every angle.'
-          : 'Nothing to suggest for this part.';
+          ? t('noPrintableOrient')
+          : t('nothingToSuggest');
       } else {
         renderSuggestions();
         // Lead with the win when the best pose needs no support (or clears every
@@ -164,12 +165,12 @@ el('suggest-orient').addEventListener('click', () => {
           note.textContent = verdict.note;
           note.className = 'hint good';
         } else {
-          note.textContent = 'Click a pose to turn the part.';
+          note.textContent = t('clickPoseToTurn');
           note.className = 'hint';
         }
       }
     } finally {
-      btn.disabled = false; btn.textContent = 'Suggest orientation';
+      btn.disabled = false; btn.textContent = t('suggestOrient');
     }
   }));
 });

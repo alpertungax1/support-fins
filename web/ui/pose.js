@@ -14,6 +14,7 @@ import { drawActive, clearPreview } from './walls.js';
 import { refreshFins } from './finbuild.js';
 import { finsVisible } from './settings.js';
 import { part, topology, shade } from './part.js';
+import { t } from './i18n.js';
 
 // The user rotates. Always. Auto-orientation may suggest, never apply -- the
 // spike's strength-optimal pose for one hub was 155mm tall balanced on a needle:
@@ -119,10 +120,10 @@ export function cancelLay() {
 }
 
 function syncLayUI() {
-  el('lay-face').textContent = layPlacing ? 'Click a face to lay it flat — Esc cancels'
-    : 'Lay a face flat';
+  el('lay-face').textContent = layPlacing ? t('layFaceArmed') : t('layFace');
   el('lay-face').classList.toggle('active', layPlacing);
 }
+window.__syncLayUI = syncLayUI;
 
 /** Rotate 90 degrees about a world axis, keeping the part seated. */
 function rotate90(name, axis) {
