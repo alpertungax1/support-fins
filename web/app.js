@@ -32,6 +32,7 @@ import {
 } from './ui/walls.js';
 import { finTris, padTris, lastBuilt } from './ui/finbuild.js';
 import { initSettings } from './ui/settings.js';
+import { initI18n } from './ui/i18n.js';
 import { part, topology, rotM3, lastResult, threshold } from './ui/part.js';
 import { gizmo, hoverFace, layActive, cancelLay, layHover, layClick } from './ui/pose.js';
 
@@ -162,6 +163,7 @@ function tick(now) {
 }
 
 initSettings();
+initI18n();
 applyVolume();
 resize();
 frame(new THREE.Vector3(60, 60, 60));

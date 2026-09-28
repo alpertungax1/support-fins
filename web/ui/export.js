@@ -52,7 +52,7 @@ const FORMATS = {
   // 3MF keeps the fins as a separate object and states millimeters, so the file
   // opens correctly oriented and support-free in Bambu Studio, OrcaSlicer, or
   // PrusaSlicer without a re-scale or a re-rotate.
-  'export-3mf': (g) => [writeThreeMF(g.partTris, g.finTris, g.base), `${g.base}-fins.3mf`],
+  'export-3mf': async (g) => [await writeThreeMF(g.partTris, g.finTris, g.base), `${g.base}-fins.3mf`],
   // Just the fins + pad (issue #5). One body, so 3MF would add nothing over STL.
   'export-fins': (g) => [writeBinarySTL(g.finTris, `${g.base} fins`), `${g.base}-fins-only.stl`],
 };
@@ -74,11 +74,12 @@ function setOpen(open) {
 
 btn.addEventListener('click', () => setOpen(menu.hidden));
 for (const [id, write] of Object.entries(FORMATS)) {
-  el(id).addEventListener('click', () => {
+  el(id).addEventListener('click', async () => {
     setOpen(false);
     const g = buildExportGeometry();
     if (!g) return;
-    download(...write(g));
+    const [payload, filename] = await write(g);
+    download(payload, filename);
   });
 }
 // click-away / Esc close it, the usual menu contract

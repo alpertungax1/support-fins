@@ -21,7 +21,7 @@
  * triangle, already in print space (oriented, seated on the plate).
  */
 
-import { zipStore, unzip } from './zip.js';
+import { zipStore, zipDeflate, unzip } from './zip.js';
 
 const NS_CORE = 'http://schemas.microsoft.com/3dmanufacturing/core/2015/02';
 const REL_3DMODEL = 'http://schemas.microsoft.com/3dmanufacturing/2013/01/3dmodel';
@@ -116,12 +116,13 @@ const ROOT_RELS = '<?xml version="1.0" encoding="UTF-8"?>\n' +
  * @param name      written as the model Title
  * @returns Blob    a .3mf package
  */
-export function writeThreeMF(partTris, finTris, name = 'Support Fins') {
-  return zipStore([
+export async function writeThreeMF(partTris, finTris, name = 'Support Fins', compress = true) {
+  const files = [
     { name: '[Content_Types].xml', data: CONTENT_TYPES },
     { name: '_rels/.rels', data: ROOT_RELS },
     { name: '3D/3dmodel.model', data: modelXML(partTris, finTris, name) },
-  ]);
+  ];
+  return compress ? await zipDeflate(files) : zipStore(files);
 }
 
 // ---------------------------------------------------------------- 3MF reader

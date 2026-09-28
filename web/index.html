@@ -60,6 +60,7 @@
               title="Just the fins and pad, in the part's print position, so they line up if imported beside it.">Fins only (STL)</button>
     </div>
   </span>
+  <button class="btn sm" id="lang-toggle" title="Dil / Language (TR / EN)">🇹🇷 TR</button>
   <a class="btn gh" href="https://github.com/gittrahan/support-fins" target="_blank" rel="noopener"
      title="Source code on GitHub. Runs entirely in your browser; no file ever leaves your machine."
      aria-label="Support Fins on GitHub"><svg viewBox="0 0 16 16" width="16" height="16"
@@ -182,6 +183,8 @@
       <select id="material">
         <option value="pla">PLA</option>
         <option value="petg">PETG</option>
+        <option value="abs">ABS / ASA</option>
+        <option value="tpu">TPU (Flexible)</option>
       </select>
     </label>
     <label class="fld">
@@ -223,6 +226,16 @@
          clean bead and BEND off instead of tearing. That only holds if this matches
          the layer height you actually slice at -- set it wrong and the tines slice
          into ~1.5 layers and leave welts. Shown only when Tines is on. -->
+    <label class="fld row" id="nozzle-fld" title="Nozzle diameter. Scales tine width and spacing.">
+      <span>Nozzle <span class="mut">mm</span></span>
+      <select id="nozzle">
+        <option value="0.25">0.25 mm</option>
+        <option value="0.4" selected>0.40 mm</option>
+        <option value="0.6">0.60 mm</option>
+        <option value="0.8">0.80 mm</option>
+      </select>
+    </label>
+
     <label class="fld row" id="layerh-fld" title="Set this to the layer height you slice at. The grip tines are one layer tall so they snap off clean; if this doesn't match your slicer, the tines tear and leave marks. Default 0.2mm.">
       <span>Layer height <span class="mut">mm</span></span>
       <input type="number" id="layer-height" min="0.08" max="0.4" step="0.04" value="0.2">
@@ -350,6 +363,13 @@
     <summary><span class="sec-title">Display</span><span class="sec-sum" id="sum-display"></span></summary>
     <label class="check" title="Shade overhangs too small for a fin amber, with a card saying they print unsupported. Off drops the highlight and the card; the readout still counts them.">
       <input type="checkbox" id="highlight-small" checked>Highlight small overhangs
+    </label>
+    <label class="check" title="Clip part at a specific layer height to inspect internal support and tine bite.">
+      <input type="checkbox" id="clip-layer">Layer inspector
+    </label>
+    <label class="fld" id="clip-fld" hidden title="Cut plane height from the bed.">
+      <span>Cut height <span class="mut" id="clip-val">0.0 mm</span></span>
+      <input type="range" id="clip-z" min="0" max="100" step="0.2" value="100">
     </label>
   </details>
 

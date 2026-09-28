@@ -17,7 +17,7 @@ import {
   setDrawnWalls, setDrawMsg, markPrintTrisDirty, clearPreview, syncDrawControls,
 } from './walls.js';
 import { activeAdded, refreshFins, markFinsStale } from './finbuild.js';
-import { finsVisible, highlightSmall, setDrawAugment, syncAugmentUI } from './settings.js';
+import { finsVisible, highlightSmall, setDrawAugment, syncAugmentUI, syncLayerClipUI } from './settings.js';
 import { gizmo, hoverFace, setGizmo, setLayPlacing } from './pose.js';
 
 const partMaterial = new THREE.MeshStandardMaterial({
@@ -241,6 +241,7 @@ export function shade() {
 
   lastResult = res;
   markPrintTrisDirty();       // orientation moved: the cached print-space part is stale
+  syncLayerClipUI();
   if (finsVisible && !gizmo.dragging) refreshFins();
   else if (finsVisible) markFinsStale();
 

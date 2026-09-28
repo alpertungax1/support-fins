@@ -106,6 +106,121 @@ export function zipStore(files) {
   return new Blob([buf], { type: 'application/vnd.ms-package.3dmanufacturing-3dmodel+xml' });
 }
 
+
+/**
+ * Asynchronous ZIP writer with native DEFLATE compression (CompressionStream).
+ * Automatically falls back to zipStore if CompressionStream is unsupported.
+ */
+export async function zipDeflate(files) {
+  if (typeof CompressionStream === 'undefined') {
+    return zipStore(files);
+  }
+  try {
+    const entries = await Promise.all(files.map(async ({ name, data }) => {
+      const nameBytes = enc.encode(name);
+      const rawBytes = typeof data === 'string' ? enc.encode(data) : data;
+      const crc = crc32(rawBytes);
+
+      const cs = new CompressionStream('deflate-raw');
+      const writer = cs.writable.getWriter();
+      writer.write(rawBytes);
+      writer.close();
+      const chunks = [];
+      const reader = cs.readable.getReader();
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        chunks.push(value);
+      }
+      const totalLen = chunks.reduce((a, b) => a + b.length, 0);
+      const deflated = new Uint8Array(totalLen);
+      let offset = 0;
+      for (const ch of chunks) {
+        deflated.set(ch, offset);
+        offset += ch.length;
+      }
+
+      const useDeflate = deflated.length < rawBytes.length;
+      const finalBytes = useDeflate ? deflated : rawBytes;
+      const method = useDeflate ? 8 : 0;
+
+      return {
+        nameBytes,
+        bytes: finalBytes,
+        rawLength: rawBytes.length,
+        crc,
+        method,
+        offset: 0
+      };
+    }));
+
+    let localSize = 0;
+    for (const e of entries) localSize += 30 + e.nameBytes.length + e.bytes.length;
+    let centralSize = 0;
+    for (const e of entries) centralSize += 46 + e.nameBytes.length;
+
+    const buf = new ArrayBuffer(localSize + centralSize + 22);
+    const view = new DataView(buf);
+    const out = new Uint8Array(buf);
+    let o = 0;
+
+    for (const e of entries) {
+      e.offset = o;
+      view.setUint32(o, 0x04034b50, true);
+      view.setUint16(o + 4, 20, true);
+      view.setUint16(o + 6, 0, true);
+      view.setUint16(o + 8, e.method, true);
+      view.setUint16(o + 10, 0, true);
+      view.setUint16(o + 12, 0x21, true);
+      view.setUint32(o + 14, e.crc, true);
+      view.setUint32(o + 18, e.bytes.length, true);
+      view.setUint32(o + 22, e.rawLength, true);
+      view.setUint16(o + 26, e.nameBytes.length, true);
+      view.setUint16(o + 28, 0, true);
+      o += 30;
+      out.set(e.nameBytes, o); o += e.nameBytes.length;
+      out.set(e.bytes, o); o += e.bytes.length;
+    }
+
+    const centralStart = o;
+    for (const e of entries) {
+      view.setUint32(o, 0x02014b50, true);
+      view.setUint16(o + 4, 20, true);
+      view.setUint16(o + 6, 20, true);
+      view.setUint16(o + 8, 0, true);
+      view.setUint16(o + 10, e.method, true);
+      view.setUint16(o + 12, 0, true);
+      view.setUint16(o + 14, 0x21, true);
+      view.setUint32(o + 16, e.crc, true);
+      view.setUint32(o + 20, e.bytes.length, true);
+      view.setUint32(o + 24, e.rawLength, true);
+      view.setUint16(o + 28, e.nameBytes.length, true);
+      view.setUint16(o + 30, 0, true);
+      view.setUint16(o + 32, 0, true);
+      view.setUint16(o + 34, 0, true);
+      view.setUint16(o + 36, 0, true);
+      view.setUint32(o + 38, 0, true);
+      view.setUint32(o + 42, e.offset, true);
+      o += 46;
+      out.set(e.nameBytes, o); o += e.nameBytes.length;
+    }
+
+    view.setUint32(o, 0x06054b50, true);
+    view.setUint16(o + 4, 0, true);
+    view.setUint16(o + 6, 0, true);
+    view.setUint16(o + 8, entries.length, true);
+    view.setUint16(o + 10, entries.length, true);
+    view.setUint32(o + 12, centralSize, true);
+    view.setUint32(o + 16, centralStart, true);
+    view.setUint16(o + 20, 0, true);
+
+    return new Blob([buf], { type: 'application/vnd.ms-package.3dmanufacturing-3dmodel+xml' });
+  } catch (err) {
+    console.warn('zipDeflate failed, falling back to zipStore', err);
+    return zipStore(files);
+  }
+}
+
 // ---------------------------------------------------------------- ZIP reader
 
 /**

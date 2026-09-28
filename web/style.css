@@ -787,3 +787,39 @@ html, body {
 .picker-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .picker-foot .note { margin: 0; font-size: 11px; color: var(--dim); }
 .picker-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+
+/* ---------- Responsive styling for tablet and smaller screens ---------- */
+@media (max-width: 900px) {
+  #topbar {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 6px 10px;
+  }
+  #topbar .spacer {
+    display: none;
+  }
+  #left-rail {
+    width: 220px;
+    font-size: 11px;
+  }
+  #right-rail {
+    width: 240px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 650px) {
+  #left-rail, #right-rail {
+    max-height: 48vh;
+    width: 190px;
+    font-size: 11px;
+    overflow-y: auto;
+  }
+  #right-rail {
+    right: 6px;
+  }
+  #left-rail {
+    left: 6px;
+  }
+}

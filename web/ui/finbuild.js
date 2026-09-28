@@ -105,7 +105,8 @@ function finOpts() {
            tunables: { tineBite: FIN.tineBite, padH: FIN.padH,
                        padGrab: PAD.grab, padStyle: PAD.style, padCustom: { ...PAD.custom },
                        propGap: PROP.gap,
-                       cutout: CUT.pattern } };
+                       cutout: CUT.pattern,
+                        nozzle: parseFloat(el('nozzle')?.value) || 0.4 } };
 }
 
 /** The Sway braces settings. Gap and bite are passed explicitly -- sway.js takes

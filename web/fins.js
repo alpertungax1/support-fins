@@ -87,6 +87,10 @@ export function applyTunables(t) {
   set(PERP, 'gap', t.propGap);
   // Not a clearance, but module state with the same Worker problem.
   if (CUTOUT_PATTERNS.includes(t.cutout)) CUT.pattern = t.cutout;
+  if (Number.isFinite(t.nozzle) && t.nozzle > 0) {
+    FIN.nozzle = t.nozzle;
+    PROP.tineW = Math.max(0.3, +(t.nozzle * 1.25).toFixed(2));
+  }
 }
 
 /**

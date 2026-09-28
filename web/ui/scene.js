@@ -134,3 +134,15 @@ export function resize() {
   camera.updateProjectionMatrix();
 }
 addEventListener('resize', resize);
+
+// Z-axis layer cross-section clipping plane
+export const clipPlane = new THREE.Plane(new THREE.Vector3(0, 0, -1), Infinity);
+
+export function setLayerClip(zHeight, active = true) {
+  if (!active || !Number.isFinite(zHeight)) {
+    renderer.clippingPlanes = [];
+  } else {
+    clipPlane.constant = zHeight;
+    renderer.clippingPlanes = [clipPlane];
+  }
+}

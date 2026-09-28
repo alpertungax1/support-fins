@@ -10,6 +10,7 @@ export const FIN = {
   // --- from docs/FIN-SPEC.md, stated on camera. Do not "tune" these. ---
   tineH: 0.2,         // = slicer layer height: a tine must be ONE layer so it prints
                       // as a single continuous bead (see prop/config.js tineH / FIN-SPEC)
+  nozzle: 0.4,        // nozzle diameter mm; scales tine width and spacing
 
   // --- ours, derived or measured ---
   tineBite: 0.3,      // how far a tine sinks into the part

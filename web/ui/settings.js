@@ -12,7 +12,8 @@ import { removeMode, syncRemoveUI, cancelRemove } from './remove.js';
 import { setDrawMsg, clearPreview, syncDrawControls } from './walls.js';
 import { lastBuilt, refreshFins } from './finbuild.js';
 import { setGizmo } from './pose.js';
-import { paintOverhangs } from './part.js';
+import { paintOverhangs, lastResult } from './part.js';
+import { setLayerClip } from './scene.js';
 
 export let finsVisible = false;
 export function setFinsVisible(v) { finsVisible = v; }
@@ -168,8 +169,10 @@ el('cutout').addEventListener('change', () => {
 // are read fresh on every build, so applying a profile + rebuilding is all it
 // takes. density is g/cm^3 for the grams receipt.
 const MATERIAL = {
-  pla:  { tineBite: 0.30, padH: 0.5, padGrab:  0.05, propGap: 0.2,  density: 1.24 },
-  petg: { tineBite: 0.15, padH: 0.3, padGrab: -0.10, propGap: 0.3,  density: 1.27 },
+  pla:  { tineBite: 0.30, padH: 0.5, padGrab:  0.05, propGap: 0.20, density: 1.24 },
+  petg: { tineBite: 0.15, padH: 0.3, padGrab: -0.10, propGap: 0.30, density: 1.27 },
+  abs:  { tineBite: 0.35, padH: 0.6, padGrab:  0.08, propGap: 0.22, density: 1.05 },
+  tpu:  { tineBite: 0.10, padH: 0.3, padGrab: -0.15, propGap: 0.35, density: 1.21 },
 };
 export let materialDensity = MATERIAL.pla.density;
 
@@ -189,6 +192,13 @@ function applyMaterial(name) {
 
 el('material').addEventListener('change', () => {
   applyMaterial(el('material').value);
+  debouncedRefresh();
+});
+
+el('nozzle')?.addEventListener('change', () => {
+  const n = parseFloat(el('nozzle').value) || 0.4;
+  FIN.nozzle = n;
+  PROP.tineW = Math.max(0.3, +(n * 1.25).toFixed(2));
   debouncedRefresh();
 });
 
@@ -297,3 +307,27 @@ export function initSettings() {
   CUT.pattern = el('cutout').value;   // a reload can keep the browser's last pick
   applyMaterial(el('material').value);   // sync density + tunables to the initial choice
 }
+
+export function syncLayerClipUI() {
+  const on = el('clip-layer')?.checked;
+  const fld = el('clip-fld');
+  if (fld) fld.hidden = !on;
+  if (!on || !lastResult) {
+    setLayerClip(Infinity, false);
+    return;
+  }
+  const slider = el('clip-z');
+  const zMax = Math.ceil(lastResult.size.z);
+  slider.max = zMax;
+  if (slider.valueAsNumber > zMax) slider.value = zMax;
+  const val = Math.min(zMax, Math.max(0, slider.valueAsNumber));
+  el('clip-val').textContent = `${val.toFixed(1)} mm`;
+  setLayerClip(val, true);
+}
+
+el('clip-layer')?.addEventListener('change', syncLayerClipUI);
+el('clip-z')?.addEventListener('input', () => {
+  const val = el('clip-z').valueAsNumber;
+  el('clip-val').textContent = `${val.toFixed(1)} mm`;
+  setLayerClip(val, true);
+});
