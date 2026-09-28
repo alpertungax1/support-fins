@@ -17,3 +17,5 @@ plugins/orca/build/
 # third-party licenses, so they're fetched locally (fetch_thingi.py), never committed
 !prototype/examples/models/*.stl
 prototype/examples/real/
+.venv/
+
