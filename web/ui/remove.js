@@ -15,6 +15,7 @@ import { lastBuilt, finMesh, setFinTris } from './finbuild.js';
 import { clearPreview, syncDrawControls } from './walls.js';
 import { updateReadout } from './readout.js';
 import { histPush } from './history.js';
+import { t } from './i18n.js';
 
 // Auto fins are a flat triangle soup in ONE mesh, but each fin record now carries
 // its triangle segment(s) (built.fins[i].triRanges, vertex-indexed into
@@ -129,7 +130,7 @@ export function syncRemoveUI() {
   el('remove-fins-controls').hidden = !show;
   el('remove-fins-toggle').hidden = !show;
   el('remove-fins-toggle').classList.toggle('primary', removeMode);
-  el('remove-fins-toggle').textContent = removeMode ? 'Click a fin — Esc done' : 'Remove fins';
+  el('remove-fins-toggle').textContent = removeMode ? t('clickFinToRemove') : t('removeFins');
   // Gate on removedIds (fins removed in THIS orientation), not the global
   // removedSigs -- otherwise a removal made in another pose shows a Restore button
   // that maps to nothing here (and whose tooltip promises "this orientation").

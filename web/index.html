@@ -29,10 +29,10 @@
 <header id="topbar">
   <span class="brand"><img src="favicon.svg" alt="" class="brand-mark">Support&nbsp;Fins</span>
   <label class="btn primary">
-    Import<input type="file" id="file" accept=".stl,.3mf,.step,.stp" hidden>
+    <span data-i18n="importBtn">Import</span><input type="file" id="file" accept=".stl,.3mf,.step,.stp" hidden>
   </label>
   <label class="field">
-    Build volume
+    <span data-i18n="buildVolume">Build volume</span>
     <select id="volume"></select>
   </label>
   <span class="field custom-vol" id="custom-vol" hidden>
@@ -40,8 +40,8 @@
            type="number" id="vy" min="20" max="2000" step="1" aria-label="depth">×<input
            type="number" id="vz" min="20" max="2000" step="1" aria-label="height">mm
   </span>
-  <label class="field" title="Surface angle from the plate below which a face needs support.">
-    Overhang
+  <label class="field" title="Surface angle from the plate below which a face needs support." id="thr-label">
+    <span data-i18n="overhang">Overhang</span>
     <input type="range" id="thr" min="30" max="70" step="1" value="45">
     <output id="thr-val">45°</output>
   </label>
@@ -76,48 +76,48 @@
 <div id="left-rail">
 <aside id="stats" hidden>
   <dl>
-    <dt>File</dt>             <dd id="s-name">—</dd>
-    <dt>Triangles</dt>        <dd id="s-tris">—</dd>
-    <dt>Size</dt>             <dd id="s-bbox">—</dd>
-    <dt>Volume</dt>           <dd id="s-fit">—</dd>
+    <dt data-i18n="dtFile">File</dt>             <dd id="s-name">—</dd>
+    <dt data-i18n="dtTris">Triangles</dt>        <dd id="s-tris">—</dd>
+    <dt data-i18n="dtSize">Size</dt>             <dd id="s-bbox">—</dd>
+    <dt data-i18n="dtVolume">Volume</dt>           <dd id="s-fit">—</dd>
   </dl>
   <hr>
   <dl>
-    <dt><i class="sw sw-over" title="Red: overhangs the tool can support"></i>Overhangs</dt> <dd id="s-over">—</dd>
-    <dt>Area</dt>                                <dd id="s-overarea">—</dd>
-    <dt><i class="sw sw-bed"></i>Bed&nbsp;contact</dt> <dd id="s-bed">—</dd>
-    <dt><i class="sw sw-fin"></i>Fins</dt>       <dd><span id="s-fins">—</span><button
+    <dt><i class="sw sw-over" title="Red: overhangs the tool can support"></i><span data-i18n="dtOverhangs">Overhangs</span></dt> <dd id="s-over">—</dd>
+    <dt data-i18n="dtArea">Area</dt>                                <dd id="s-overarea">—</dd>
+    <dt><i class="sw sw-bed"></i><span data-i18n="dtBedContact">Bed&nbsp;contact</span></dt> <dd id="s-bed">—</dd>
+    <dt><i class="sw sw-fin"></i><span data-i18n="dtFins">Fins</span></dt>       <dd><span id="s-fins">—</span><button
         type="button" class="note-info" id="s-fin-info" hidden
         aria-label="How these supports work, and what this pose leaves uncovered">i</button></dd>
-    <dt><i class="sw sw-pad"></i>Bed&nbsp;pad</dt> <dd id="s-pad">—</dd>
-    <dt>Analysis</dt>                            <dd id="s-time">—</dd>
+    <dt><i class="sw sw-pad"></i><span data-i18n="dtBedPad">Bed&nbsp;pad</span></dt> <dd id="s-pad">—</dd>
+    <dt data-i18n="dtAnalysis">Analysis</dt>                            <dd id="s-time">—</dd>
   </dl>
 </aside>
 
 <aside id="orient" hidden>
-  <span class="lbl">Rotate 90°</span>
+  <span class="lbl" data-i18n="rot90">Rotate 90°</span>
   <button class="btn sm" id="rot-x" aria-label="Rotate 90 degrees about X">X</button>
   <button class="btn sm" id="rot-y" aria-label="Rotate 90 degrees about Y">Y</button>
   <button class="btn sm" id="rot-z" aria-label="Rotate 90 degrees about Z">Z</button>
-  <button class="btn sm" id="rot-reset">Reset</button>
-  <button class="btn sm" id="undo" title="Undo (⌘/Ctrl+Z)" disabled>Undo</button>
-  <button class="btn sm" id="redo" title="Redo (⇧⌘/Ctrl+Shift+Z)" disabled>Redo</button>
+  <button class="btn sm" id="rot-reset" data-i18n="reset">Reset</button>
+  <button class="btn sm" id="undo" title="Undo (⌘/Ctrl+Z)" disabled data-i18n="undo">Undo</button>
+  <button class="btn sm" id="redo" title="Redo (⇧⌘/Ctrl+Shift+Z)" disabled data-i18n="redo">Redo</button>
   <p class="readout"><span id="rot-now">X 0° · Y 0° · Z 0°</span><span id="rot-delta"></span></p>
-  <p class="hint">Drag the rings to turn it, or:</p>
+  <p class="hint" data-i18n="dragHint">Drag the rings to turn it, or:</p>
   <button class="btn sm" id="lay-face"
-          title="Click this, then click a face to set it flat on the bed. Off by default so a stray click can't re-lay the part.">Lay a face flat</button>
+          title="Click this, then click a face to set it flat on the bed. Off by default so a stray click can't re-lay the part." data-i18n="layFace">Lay a face flat</button>
   <!-- Automatic strength view: no input. The faint frames show how the print is
        layered (they stay horizontal while the part turns inside them), and the note
        says where this orientation is weak. A printed part splits across its layers,
        so orientation IS strength -- this makes that visible as you rotate. -->
   <div class="layerview">
     <label class="check layers-toggle" title="Show the horizontal print layers around the part.">
-      <input type="checkbox" id="show-layers">Show layers
+      <input type="checkbox" id="show-layers"><span data-i18n="showLayers">Show layers</span>
     </label>
   </div>
   <div class="suggest">
     <div class="suggest-head">
-      <button class="btn sm" id="suggest-orient">Suggest orientation</button>
+      <button class="btn sm" id="suggest-orient" data-i18n="suggestOrient">Suggest orientation</button>
       <button class="disclosure" id="suggest-toggle" hidden aria-expanded="true"
               aria-label="Collapse suggestions" title="Collapse">&rsaquo;</button>
     </div>
@@ -140,12 +140,12 @@
       <button class="btn sm" id="load-down"  aria-label="Load points down">↓</button>
       <button class="btn sm" id="load-left"  aria-label="Load points left">←</button>
       <button class="btn sm" id="load-right" aria-label="Load points right">→</button>
-      <button class="btn sm" id="load-front" aria-label="Load points toward you">⊙ front</button>
-      <button class="btn sm" id="load-back"  aria-label="Load points away from you">⊗ back</button>
+      <button class="btn sm" id="load-front" aria-label="Load points toward you" data-i18n="loadFront">⊙ front</button>
+      <button class="btn sm" id="load-back"  aria-label="Load points away from you" data-i18n="loadBack">⊗ back</button>
     </div>
-    <button class="btn sm" id="load-clear" hidden>Clear</button>
+    <button class="btn sm" id="load-clear" hidden data-i18n="clear">Clear</button>
     <p class="load-verdict" id="load-note" hidden></p>
-    <button class="btn sm" id="load-suggest" hidden>Turn to the strongest printable pose</button>
+    <button class="btn sm" id="load-suggest" hidden data-i18n="turnStrongest">Turn to the strongest printable pose</button>
   </div>
 </aside>
 <!-- Spacer AFTER the panels so they top-anchor and grow DOWNWARD: content that
@@ -172,14 +172,9 @@
        costs one line. Fields that don't apply in the current mode stay hidden, as
        before. Layout only: every control keeps its id, and nothing it builds moved. -->
   <details class="sec" data-sec="setup" open>
-    <summary><span class="sec-title">Setup</span><span class="sec-sum" id="sum-setup"></span></summary>
-    <!-- Material: PETG welds to a support far harder than the PLA the bite numbers
-         were tuned for, so it needs more clearance everywhere. PLA is the default and
-         keeps today's tight grip; PETG widens the support gap + fin-tine standoff,
-         halves the tine bite, thins the bed pad, and turns the pad's tack into a gap.
-         Applied in ui/settings.js (applyMaterial), which also re-syncs the tunables below. -->
+    <summary><span class="sec-title" data-i18n="setupSec">Setup</span><span class="sec-sum" id="sum-setup"></span></summary>
     <label class="fld row" id="material-fld" title="The filament you'll print in. PETG fuses to supports much harder than PLA, so PETG loosens the gaps, shrinks the tine bite, and gives the bed pad a gap instead of a bite. PLA keeps the tighter grip.">
-      Material
+      <span data-i18n="material">Material</span>
       <select id="material">
         <option value="pla">PLA</option>
         <option value="petg">PETG</option>
@@ -188,16 +183,10 @@
       </select>
     </label>
     <label class="fld">
-      Placement
+      <span data-i18n="placement">Placement</span>
       <select id="fin-mode" title="Who places the support.">
-        <!-- Two modes only, on purpose. AUTO (fins.js mode 'auto') is the default and
-             does everything: a tined combined fin on each overhang face steep and flat
-             enough to grip, a plain breakaway prop under the shallow/curved ones that
-             can't take a fin. DRAW lets you place a fin by hand. The old fins-only
-             "Combined fin" mode was dropped -- it built nothing (and said nothing) on
-             parts with no fin sites, which just read as broken. -->
-        <option value="auto">Auto — place supports for me</option>
-        <option value="draw">Draw — place them by hand</option>
+        <option value="auto" data-i18n="modeAuto">Auto — place supports for me</option>
+        <option value="draw" data-i18n="modeDraw">Draw — place them by hand</option>
       </select>
     </label>
   </details>
@@ -208,26 +197,17 @@
   <details class="sec" data-sec="tines" open>
     <summary>
       <label class="check sec-title" title="Tines fuse the support to the part so it grips instead of just propping. Off = plain breakaway wall.">
-        <input type="checkbox" id="tines" checked>Tines <span class="mut">grip the part</span>
+        <input type="checkbox" id="tines" checked><span data-i18n="tinesSec">Tines</span> <span class="mut" data-i18n="tinesMut">grip the part</span>
       </label>
       <span class="sec-sum" id="sum-tines"></span>
     </summary>
-    <!-- Tine grip density: how tightly the horizontal tine comb is spaced along each
-         gripping support. Light = a loose comb (fewest marks, the default) — a per-wall
-         floor keeps at least a few tines so it still holds; Firm = a dense comb (max grip)
-         for a tippy or tall part, at the cost of more marks on the supported face.
-         Shown only when Tines is on. -->
     <label class="fld" id="tinegrip-fld"
            title="How tightly to space the grip tines. Light = fewest marks (default), a per-wall floor keeps grip; Firm = dense comb / max grip for a tippy or tall part.">
-      <span>Tine grip <span class="mut">light ⟶ firm</span></span>
+      <span><span data-i18n="tineGrip">Tine grip</span> <span class="mut" data-i18n="tineGripMut">light ⟶ firm</span></span>
       <input type="range" id="tine-density" min="0" max="100" step="5" value="0">
     </label>
-    <!-- Layer height: the grip tines are exactly ONE layer tall so they print as one
-         clean bead and BEND off instead of tearing. That only holds if this matches
-         the layer height you actually slice at -- set it wrong and the tines slice
-         into ~1.5 layers and leave welts. Shown only when Tines is on. -->
     <label class="fld row" id="nozzle-fld" title="Nozzle diameter. Scales tine width and spacing.">
-      <span>Nozzle <span class="mut">mm</span></span>
+      <span><span data-i18n="nozzle">Nozzle</span> <span class="mut">mm</span></span>
       <select id="nozzle">
         <option value="0.25">0.25 mm</option>
         <option value="0.4" selected>0.40 mm</option>
@@ -237,138 +217,105 @@
     </label>
 
     <label class="fld row" id="layerh-fld" title="Set this to the layer height you slice at. The grip tines are one layer tall so they snap off clean; if this doesn't match your slicer, the tines tear and leave marks. Default 0.2mm.">
-      <span>Layer height <span class="mut">mm</span></span>
+      <span><span data-i18n="layerHeight">Layer height</span> <span class="mut">mm</span></span>
       <input type="number" id="layer-height" min="0.08" max="0.4" step="0.04" value="0.2">
     </label>
   </details>
 
-  <!-- Contact/gap tuning: the default holds and breaks off for most parts, but the
-       right clearance depends on the printer and the surface you care about, so it
-       is exposed. Support gap = clearance between a support top and the part (bigger
-       = cleaner surface / easier to remove, too big = stops holding the overhang).
-       Bed pad = the pad under a part that barely touches the plate (PAD.style in
-       fins/pad.js): Auto (default) picks Light, or Sure hold on a small foot, and
-       its option text shows which. Light is one layer standing 0.12mm off the part, like a slicer
-       brim; Sure hold is the thicker pad tacked into the part; Custom exposes
-       every pad number and is the only style that shows them. -->
   <details class="sec" data-sec="clearances">
-    <summary><span class="sec-title">Clearances</span><span class="sec-sum" id="sum-clearances"></span></summary>
+    <summary><span class="sec-title" data-i18n="clearancesSec">Clearances</span><span class="sec-sum" id="sum-clearances"></span></summary>
     <label class="fld row" title="Clearance between a support top and the part. Bigger = cleaner surface / easier removal; too big stops holding the overhang. Default 0.2mm.">
-      <span>Support gap <span class="mut">mm</span></span>
+      <span><span data-i18n="supportGap">Support gap</span> <span class="mut">mm</span></span>
       <input type="number" id="gap" min="0.1" max="0.4" step="0.05" value="0.2">
     </label>
     <label class="fld row" title="A tilted part rests on an edge and peels off the plate without a pad. Auto: Light, or Sure hold when the part meets the plate on a point or a small round foot (it shows which). Light: one layer, 0.12mm off the part, peels off like a brim. Sure hold: thicker and tacked into the part, holds harder but is harder to remove. Custom: set every number yourself.">
-      Bed pad
+      <span data-i18n="bedPad">Bed pad</span>
       <select id="bed-pad">
-        <option value="off">Off</option>
-        <option value="auto" selected>Auto</option>
-        <option value="light">Light</option>
-        <option value="sure">Sure hold</option>
-        <option value="custom">Custom</option>
+        <option value="off" data-i18n="padOff">Off</option>
+        <option value="auto" selected data-i18n="padAuto">Auto</option>
+        <option value="light" data-i18n="padLight">Light</option>
+        <option value="sure" data-i18n="padSure">Sure hold</option>
+        <option value="custom" data-i18n="padCustom">Custom</option>
       </select>
     </label>
     <label class="fld row" data-pad-custom hidden title="How tall the pad is. Only the first layer grips the plate; more layers make it stiffer and harder to peel.">
-      <span>Pad thickness <span class="mut">mm</span></span>
+      <span><span data-i18n="padThickness">Pad thickness</span> <span class="mut">mm</span></span>
       <input type="number" id="pad-h" min="0.1" max="1.0" step="0.05" value="0.2">
     </label>
     <label class="fld row" data-pad-custom hidden title="Sideways clearance between the pad and the part's first layer. 0.12mm lets first-layer squish just close it, the way a slicer brim holds; bigger comes off easier and holds less. Under 0.1mm most slicers merge the gap and the pad welds on. 0 = no gap (Pad grip decides).">
-      <span>Pad gap <span class="mut">mm</span></span>
+      <span><span data-i18n="padGap">Pad gap</span> <span class="mut">mm</span></span>
       <input type="number" id="pad-gap" min="0" max="0.5" step="0.01" value="0.12">
     </label>
     <label class="fld row" data-pad-custom hidden title="Where the pad meets the part's underside. Positive bites in to hold harder; 0 is flush; negative leaves a gap that snaps off cleaner.">
-      <span>Pad grip <span class="mut">mm</span></span>
+      <span><span data-i18n="padGrip">Pad grip</span> <span class="mut">mm</span></span>
       <input type="number" id="pad-grip" min="-0.2" max="0.3" step="0.05" value="0">
     </label>
     <label class="fld row" data-pad-custom hidden title="How far the pad spreads past the part's contact with the plate. More spread = more plate grip.">
-      <span>Pad spread <span class="mut">mm</span></span>
+      <span><span data-i18n="padSpread">Pad spread</span> <span class="mut">mm</span></span>
       <input type="number" id="pad-margin" min="1" max="12" step="0.5" value="4">
     </label>
   </details>
 
-  <!-- Sway braces (sway.js): for TALL parts that drift, sag or wobble as they grow.
-       A tapered buttress rib stands edge-on to an upright side, tied to it by
-       one-layer tines spaced evenly all the way up. Off by default; in Auto it
-       braces the tallest sides, in Draw you click an upright side to add one.
-       The switch lives in the section header, like Tines, so leaving it off
-       costs one line. -->
   <details class="sec" data-sec="sway">
     <summary>
       <label class="check sec-title" title="Stand tapered buttress ribs against the upright sides of a tall part, tied on with tines all the way up, so it doesn't drift or wobble as it grows. In Draw, click an upright side to add one.">
-        <input type="checkbox" id="sway">Sway braces <span class="mut">tall parts</span>
+        <input type="checkbox" id="sway"><span data-i18n="swaySec">Sway braces</span> <span class="mut" data-i18n="swayMut">tall parts</span>
       </label>
       <span class="sec-sum" id="sum-sway"></span>
     </summary>
     <label class="fld row" id="sway-from-fld" title="Height the brace tines start at. 0 = grip the whole height; raise it to tie on only above where the part starts to move.">
-      <span>Brace grip from <span class="mut">mm up</span></span>
+      <span><span data-i18n="braceFrom">Brace grip from</span> <span class="mut" data-i18n="braceFromMut">mm up</span></span>
       <input type="number" id="sway-from" min="0" max="2000" step="5" value="0">
     </label>
     <label class="fld row" id="sway-spacing-fld" title="Vertical distance between brace tines. Smaller = held tighter, more marks on the side. Default 6mm.">
-      <span>Brace tine spacing <span class="mut">mm</span></span>
+      <span><span data-i18n="braceSpacing">Brace tine spacing</span> <span class="mut">mm</span></span>
       <input type="number" id="sway-spacing" min="2" max="30" step="1" value="6">
     </label>
     <label class="fld row" id="sway-depth-fld" title="How far the brace reaches out at the bed, as a share of its height. Deeper = stiffer, more plastic. Default 15%.">
-      <span>Brace depth <span class="mut">% of height</span></span>
+      <span><span data-i18n="braceDepth">Brace depth</span> <span class="mut" data-i18n="braceDepthMut">% of height</span></span>
       <input type="number" id="sway-depth" min="5" max="50" step="1" value="15">
     </label>
   </details>
 
   <details class="sec" data-sec="walls" open>
-    <summary><span class="sec-title">Walls</span><span class="sec-sum" id="sum-walls"></span></summary>
-    <!-- Cutouts (issue #34): holes through the middle of each breakaway wall to
-         save filament. Every hole has a pointed roof (>=45deg) so nothing bridges;
-         the contact top, foot and ends stay solid, and a wall too short for a hole
-         stays solid. Tined side fins are not cut -- their tines anchor all over. -->
+    <summary><span class="sec-title" data-i18n="wallsSec">Walls</span><span class="sec-sum" id="sum-walls"></span></summary>
     <label class="fld row" title="Cut holes through tall breakaway walls to save filament. The top edge that holds the part, the foot, and the wall's ends stay solid, and every hole has a pointed roof so it prints without bridging. Short walls stay solid.">
-      Cutouts
+      <span data-i18n="cutouts">Cutouts</span>
       <select id="cutout">
-        <option value="none">None</option>
-        <option value="diamond">Diamond</option>
-        <option value="triangle">Triangle</option>
-        <option value="arch">Arch</option>
-        <option value="lattice">Lattice</option>
+        <option value="none" data-i18n="cutNone">None</option>
+        <option value="diamond" data-i18n="cutDiamond">Diamond</option>
+        <option value="triangle" data-i18n="cutTriangle">Triangle</option>
+        <option value="arch" data-i18n="cutArch">Arch</option>
+        <option value="lattice" data-i18n="cutLattice">Lattice</option>
       </select>
     </label>
-    <!-- Wide-face row density: an overhang face too wide for one corner brace gets a
-         ROW of fins (a wide tilted plate would otherwise sag between two braces).
-         This sets the row pitch: Sparse = fewer fins / less plastic, Dense = more.
-         A floor keeps at least one brace so a wide face is never left bare. Only
-         bites on a broad face; narrow parts keep their 2-corner bracing. Auto only. -->
     <label class="fld" id="coverage-fld"
            title="How densely to line a WIDE overhang face with fins. The middle is the anti-sag default; drag LEFT for fewer fins (a small part can go down to one — the readout warns if a broad face then risks sagging), RIGHT for more support. Narrow parts are unaffected.">
-      <span>Wide-face coverage <span class="mut">sparse ⟶ dense</span></span>
+      <span><span data-i18n="coverage">Wide-face coverage</span> <span class="mut" data-i18n="coverageMut">sparse ⟶ dense</span></span>
       <input type="range" id="coverage" min="0" max="100" step="5" value="50">
     </label>
-    <!-- Suggest + Draw mix: place extra walls by hand where auto-placement missed.
-         Shown only in Suggest mode (toggled in ui/settings.js). Per-fin removal (Auto only,
-         shown via ui/remove.js syncRemoveUI): arm a click-to-remove mode, hover lights a
-         fin red, click drops just that one; Restore all brings every one back. -->
     <button class="btn sm" id="augment-toggle" hidden
-            title="Place extra breakaway walls by hand, on top of the auto-placed ones.">+ Add walls by hand</button>
+            title="Place extra breakaway walls by hand, on top of the auto-placed ones." data-i18n="addWallsHand">+ Add walls by hand</button>
     <div id="remove-fins-controls" hidden>
       <div class="draw-btns">
         <button class="btn sm" id="remove-fins-toggle" hidden
-                title="Click a fin to remove just that one. Esc or right-click cancels.">Remove fins</button>
+                title="Click a fin to remove just that one. Esc or right-click cancels." data-i18n="removeFins">Remove fins</button>
         <button class="btn sm" id="restore-fins" hidden
-                title="Bring back every fin removed in this orientation.">Restore all</button>
+                title="Bring back every fin removed in this orientation." data-i18n="restoreAll">Restore all</button>
       </div>
     </div>
   </details>
 
-  <!-- Display: how the part is drawn, not what gets built. "Highlight small overhangs"
-       shades the slivers too small for a fin amber and explains them in the
-       over-warn card; off hides both. The readout keeps its sliver count either
-       way, so turning it off never hides that they exist. Remembered in
-       localStorage (optional). -->
   <details class="sec" data-sec="display">
-    <summary><span class="sec-title">Display</span><span class="sec-sum" id="sum-display"></span></summary>
+    <summary><span class="sec-title" data-i18n="displaySec">Display</span><span class="sec-sum" id="sum-display"></span></summary>
     <label class="check" title="Shade overhangs too small for a fin amber, with a card saying they print unsupported. Off drops the highlight and the card; the readout still counts them.">
-      <input type="checkbox" id="highlight-small" checked>Highlight small overhangs
+      <input type="checkbox" id="highlight-small" checked><span data-i18n="highlightSmall">Highlight small overhangs</span>
     </label>
     <label class="check" title="Clip part at a specific layer height to inspect internal support and tine bite.">
-      <input type="checkbox" id="clip-layer">Layer inspector
+      <input type="checkbox" id="clip-layer"><span data-i18n="layerInspector">Layer inspector</span>
     </label>
     <label class="fld" id="clip-fld" hidden title="Cut plane height from the bed.">
-      <span>Cut height <span class="mut" id="clip-val">0.0 mm</span></span>
+      <span><span data-i18n="cutHeight">Cut height</span> <span class="mut" id="clip-val">0.0 mm</span></span>
       <input type="range" id="clip-z" min="0" max="100" step="0.2" value="100">
     </label>
   </details>
@@ -381,8 +328,8 @@
       up green when a fin can go there — to stand a support fin against it.</p>
     <div class="draw-btns">
       <button class="btn sm" id="draw-remove" hidden
-              title="Remove the support you clicked (Delete or Backspace also works).">Remove selected</button>
-      <button class="btn sm" id="draw-clear">Clear all</button>
+              title="Remove the support you clicked (Delete or Backspace also works)." data-i18n="drawRemove">Remove selected</button>
+      <button class="btn sm" id="draw-clear" data-i18n="drawClear">Clear all</button>
     </div>
   </div>
 </aside>
@@ -403,7 +350,7 @@
   <p class="over-warn" id="over-warn"></p>
   <div id="receipt" hidden>
     <span id="r-grams">—</span>
-    <span class="r-unit">of support material added</span>
+    <span class="r-unit" data-i18n="receiptUnit">of support material added</span>
     <button type="button" class="r-info" id="r-info" aria-label="About this number"
        title="Grams assume PLA and count only the fins + pad the tool adds, printed near-solid, cross-checked against the builder's fin volume. In test prints, breakaway fins used 20–45% less plastic and printed ~30% faster than slicer supports.">i</button>
   </div>
@@ -414,22 +361,22 @@
 
 <div id="drop">
   <div class="inner">
-    <p class="big">Print it support-free, in any slicer</p>
-    <p class="lede">Rotate a part however it prints best, and Support Fins bakes the
+    <p class="big" data-i18n="dropBig">Print it support-free, in any slicer</p>
+    <p class="lede" data-i18n="dropLede">Rotate a part however it prints best, and Support Fins bakes the
       breakaway supports right into the STL. It prints the same on any machine, in any
       slicer, with supports turned off.</p>
     <ol class="steps">
-      <li><strong>Import an STL, 3MF or STEP.</strong> Drop it anywhere on this page.</li>
-      <li><strong>Rotate it.</strong> Red marks every surface that needs support.</li>
-      <li><strong>Export.</strong> Fins come baked in — no slicer supports needed.</li>
+      <li data-i18n="dropStep1"><strong>Import an STL, 3MF or STEP.</strong> Drop it anywhere on this page.</li>
+      <li data-i18n="dropStep2"><strong>Rotate it.</strong> Red marks every surface that needs support.</li>
+      <li data-i18n="dropStep3"><strong>Export.</strong> Fins come baked in — no slicer supports needed.</li>
     </ol>
-    <p class="small">Opening the 3MF, Bambu Studio and PrusaSlicer may note it has
+    <p class="small" data-i18n="dropSmall1">Opening the 3MF, Bambu Studio and PrusaSlicer may note it has
       “no config” and load the geometry only — that’s expected. The file is pure
       geometry with no slicer profile baked in, so it opens the same in every slicer;
       your part comes in correctly oriented and sized. Just slice with supports off.</p>
-    <p class="small">Nothing is uploaded. The file is read inside this tab and never
+    <p class="small" data-i18n="dropSmall2">Nothing is uploaded. The file is read inside this tab and never
       leaves your machine.</p>
-    <p class="kofi-line">Free and open source. If it ever saves you a print,
+    <p class="kofi-line" data-i18n="dropKofi">Free and open source. If it ever saves you a print,
       <a class="kofi" href="https://ko-fi.com/matthewtrahan" target="_blank" rel="noopener">buy
       me a coffee&nbsp;☕</a>.</p>
   </div>
@@ -441,15 +388,15 @@
      only when a file has more than one object; single-object files skip it. -->
 <div id="picker" hidden>
   <div class="picker-panel" role="dialog" aria-modal="true" aria-labelledby="picker-title">
-    <h2 id="picker-title">This file has several objects</h2>
-    <p class="picker-sub">Pick the one to add fins to. Check more than one to merge
+    <h2 id="picker-title" data-i18n="pickerTitle">This file has several objects</h2>
+    <p class="picker-sub" data-i18n="pickerSub">Pick the one to add fins to. Check more than one to merge
       them into a single part.</p>
     <ul id="picker-list"></ul>
     <div class="picker-foot">
       <span id="picker-hint" class="note"></span>
       <span class="picker-actions">
-        <button class="btn" id="picker-cancel">Cancel</button>
-        <button class="btn primary" id="picker-load">Load</button>
+        <button class="btn" id="picker-cancel" data-i18n="pickerCancel">Cancel</button>
+        <button class="btn primary" id="picker-load" data-i18n="pickerLoad">Load</button>
       </span>
     </div>
   </div>

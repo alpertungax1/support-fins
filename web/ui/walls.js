@@ -16,6 +16,7 @@ import { pickFace } from './pose.js';
 import { part, topology, rotM3, lastResult, updateFit } from './part.js';
 import { finsVisible, finMode, drawAugment } from './settings.js';
 import { lastBuilt, swayOpts } from './finbuild.js';
+import { t } from './i18n.js';
 
 // ---- draw mode: the user places breakaway walls by hand --------------------
 // A drawn wall IS the same kind of support the auto-placer emits, so it shares
@@ -343,12 +344,9 @@ function placeSway(hit) {
  *  wall in the Suggest "+ Add" augment. */
 export function syncDrawControls() {
   el('draw-controls').hidden = !drawShown();
-  el('draw-hint').innerHTML = 'Click <strong>two points</strong> across an overhang '
-    + '— straight onto the red faces — to lay a breakaway wall along that line. '
-    + (el('sway').checked
-      ? 'Click an <strong>upright side</strong> once to stand a sway brace against it. '
-      : '')
-    + '<kbd>Esc</kbd> or right-click cancels.';
+  el('draw-hint').innerHTML = t('drawHintTwoPoints')
+    + (el('sway').checked ? t('drawHintSway') : '')
+    + t('escCancel');
 }
 
 // Clear acts on the hand-drawn breakaway walls -- the thing both Draw and the

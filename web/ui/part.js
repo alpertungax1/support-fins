@@ -19,6 +19,7 @@ import {
 import { activeAdded, refreshFins, markFinsStale } from './finbuild.js';
 import { finsVisible, highlightSmall, setDrawAugment, syncAugmentUI, syncLayerClipUI } from './settings.js';
 import { gizmo, hoverFace, setGizmo, setLayPlacing } from './pose.js';
+import { currentLang } from './i18n.js';
 
 const partMaterial = new THREE.MeshStandardMaterial({
   color: 0xffffff, roughness: 0.62, metalness: 0.05,
@@ -236,7 +237,8 @@ export function shade() {
   // appends to this line, and the mode / bed-pad / toggle handlers call
   // refreshFins() WITHOUT going through shade(), so appending in place stacked
   // up "· fins 3 ms · fins 3 ms · fins 3 ms" with every toggle.
-  analysisTiming = `${ms.toFixed(0)} ms · weld ${weldMs.toFixed(0)} ms`;
+  const weldLbl = currentLang === 'tr' ? 'kaynak' : 'weld';
+  analysisTiming = `${ms.toFixed(0)} ms · ${weldLbl} ${weldMs.toFixed(0)} ms`;
   el('s-time').textContent = analysisTiming;
 
   lastResult = res;

@@ -11,6 +11,7 @@ import {
 } from './settings.js';
 import { analysisTiming } from './part.js';
 import { activeAdded, finMaterial, padMaterial } from './finbuild.js';
+import { currentLang } from './i18n.js';
 
 /**
  * Why did this part get no fins, in terms the user can act on?
@@ -158,12 +159,16 @@ function updateDrawReadout(built, ms) {
   const tines = ok.reduce((a, w) => a + (w.info?.tines ?? 0), 0);
   const braces = ok.filter((w) => w.kind === 'sway').length;
   const walls = ok.length - braces;
-  const parts = [];
-  if (walls) parts.push(`${walls} drawn wall${walls === 1 ? '' : 's'}`);
-  if (braces) parts.push(`${braces} sway brace${braces === 1 ? '' : 's'}`);
+  const isTr = currentLang === 'tr';
+  const wallsLbl = isTr ? 'çizilen duvar' : `drawn wall${walls === 1 ? '' : 's'}`;
+  const bracesLbl = isTr ? 'sarsıntı desteği' : `sway brace${braces === 1 ? '' : 's'}`;
+  const tinesLbl = isTr ? 'tırnak' : 'tines';
+  const noneYetLbl = isTr ? 'henüz yok' : 'none yet';
+  if (walls) parts.push(`${walls} ${wallsLbl}`);
+  if (braces) parts.push(`${braces} ${bracesLbl}`);
   box.textContent = ok.length
-    ? parts.join(' + ') + (tines ? ` · ${tines} tines` : '')
-    : 'none yet';
+    ? parts.join(' + ') + (tines ? ` · ${tines} ${tinesLbl}` : '')
+    : noneYetLbl;
   box.classList.toggle('warn', ok.length === 0);
 
   const lead = [];
@@ -213,16 +218,23 @@ function updateDrawReadout(built, ms) {
  */
 function padStatus(built) {
   syncAutoLabel(built);
-  if (!built.pad) return 'not needed';
-  return built.pad.autoSure ? 'Sure hold (small foot)' : 'added';
+  const isTr = currentLang === 'tr';
+  if (!built.pad) return isTr ? 'gerek yok' : 'not needed';
+  return built.pad.autoSure
+    ? (isTr ? 'Sağlam tutuş (küçük taban)' : 'Sure hold (small foot)')
+    : (isTr ? 'eklendi' : 'added');
 }
 // The Auto option names what it built, so the dropdown never claims Light while
 // the pad on screen is Sure hold.
 function syncAutoLabel(built) {
   const opt = el('bed-pad').querySelector('option[value="auto"]');
   const p = built?.pad;
-  opt.textContent = !p || PAD.style !== 'auto' ? 'Auto'
-    : p.style === 'sure' ? 'Auto (Sure hold)' : 'Auto (Light)';
+  const isTr = currentLang === 'tr';
+  const autoStr = isTr ? 'Otomatik' : 'Auto';
+  const sureStr = isTr ? 'Otomatik (Sağlam tutuş)' : 'Auto (Sure hold)';
+  const lightStr = isTr ? 'Otomatik (Hafif)' : 'Auto (Light)';
+  opt.textContent = !p || PAD.style !== 'auto' ? autoStr
+    : p.style === 'sure' ? sureStr : lightStr;
   syncSectionSums();
 }
 function padNote(built) {
@@ -265,26 +277,43 @@ function updateFinReadout(built, ms) {
     // Named apart so the readout is honest: the support fins sit on the overhangs
     // (tined when the toggle is on), the props are the fallback under ledges too
     // flat to take a fin. "N fins" alone would hide which is which.
+    const isTr = currentLang === 'tr';
     const p = built.propCount, b = built.braceCount;
     const seg = [];
-    if (b) seg.push(`${b} support fin${b === 1 ? '' : 's'}` + (built.tines ? ` · ${built.tines} tines` : ''));
-    if (p) seg.push(`${p} prop${p === 1 ? '' : 's'}`);
+    if (b) {
+      const lbl = isTr ? 'destek kanadı' : `support fin${b === 1 ? '' : 's'}`;
+      const tinesLbl = isTr ? 'tırnak' : 'tines';
+      seg.push(`${b} ${lbl}` + (built.tines ? ` · ${built.tines} ${tinesLbl}` : ''));
+    }
+    if (p) {
+      const lbl = isTr ? 'dikme' : `prop${p === 1 ? '' : 's'}`;
+      seg.push(`${p} ${lbl}`);
+    }
     autoTxt = seg.join(' + ');
   } else {
+    const isTr = currentLang === 'tr';
+    const finLbl = isTr
+      ? (kind === 'prop' ? 'dikme' : 'destek kanadı')
+      : `${kind === 'prop' ? 'prop' : 'support fin'}${n === 1 ? '' : 's'}`;
+    const tinesLbl = isTr ? 'tırnak' : 'tines';
     autoTxt = n
-      ? `${n} ${kind === 'prop' ? 'prop' : 'support fin'}${n === 1 ? '' : 's'}`
-        + (built.mode === 'prop' || !built.tines ? '' : ` · ${built.tines} tines`)
+      ? `${n} ${finLbl}`
+        + (built.mode === 'prop' || !built.tines ? '' : ` · ${built.tines} ${tinesLbl}`)
       : '';
   }
-  const drawnTxt = drawnOk ? `${autoTxt ? ' + ' : ''}${drawnOk} drawn` : '';
+  const isTr = currentLang === 'tr';
+  const drawnLbl = isTr ? 'çizildi' : 'drawn';
+  const drawnTxt = drawnOk ? `${autoTxt ? ' + ' : ''}${drawnOk} ${drawnLbl}` : '';
   const removedN = removedIds.size;
-  const removedTxt = removedN ? ` (${removedN} removed)` : '';
+  const removedTxt = removedN ? (isTr ? ` (${removedN} silindi)` : ` (${removedN} removed)`) : '';
   const sw = built.sway;
+  const swayLbl = isTr ? 'sarsıntı desteği' : `sway brace${sw?.count === 1 ? '' : 's'}`;
+  const braceTinesLbl = isTr ? 'destek tırnağı' : 'brace tines';
   const swayTxt = sw?.count
-    ? `${autoTxt || drawnTxt ? ' + ' : ''}${sw.count} sway brace${sw.count === 1 ? '' : 's'}`
-      + (sw.tines ? ` · ${sw.tines} brace tines` : '')
+    ? `${autoTxt || drawnTxt ? ' + ' : ''}${sw.count} ${swayLbl}`
+      + (sw.tines ? ` · ${sw.tines} ${braceTinesLbl}` : '')
     : '';
-  box.textContent = (autoTxt + drawnTxt + swayTxt + removedTxt) || 'none possible';
+  box.textContent = (autoTxt + drawnTxt + swayTxt + removedTxt) || (isTr ? 'mümkün değil' : 'none possible');
   box.classList.toggle('warn', n === 0 && !drawnOk && !sw?.count);
 
   // `lead` = short + must-see, stays in the panel; `help` = how-it-works and
